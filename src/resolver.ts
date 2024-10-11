@@ -22,14 +22,8 @@ function specToCode(file: string, useRequestSpecs: boolean): string[] {
 }
 
 function switchToSpecDir(file: string, useRequestSpecs: boolean): string[] {
-	let requestSpecFolder = "/spec/controllers/";
-
-	if (useRequestSpecs) {
-		requestSpecFolder = "/spec/requests/";
-	}
-
 	if (file.includes("/app/controllers/")) {
-		let output = file.replace("/app/controllers/", requestSpecFolder);
+		let output = file.replace("/app/controllers/", "/spec/requests/");
 
 		if (useRequestSpecs) {
 			output = output.replace("_controller", "_request");
@@ -54,12 +48,6 @@ function switchToSpecDir(file: string, useRequestSpecs: boolean): string[] {
 }
 
 function switchToCodeDir(file: string, useRequestSpecs: boolean): string[] {
-	let requestSpecFolder = "/spec/controllers/";
-
-	if (useRequestSpecs) {
-		requestSpecFolder = "/spec/requests/";
-	}
-
 	if (file.includes("/spec/config/initializers/")) {
 		return [
 			file.replace("/spec/", "/"),
@@ -69,8 +57,8 @@ function switchToCodeDir(file: string, useRequestSpecs: boolean): string[] {
 			file.replace("/spec/", "/"),
 			file.replace("/spec/", "/app/"),
 		];
-	} else if (file.includes(requestSpecFolder)) {
-		let output = file.replace(requestSpecFolder, "/app/controllers/");
+	} else if (file.includes("/spec/requests/")) {
+		let output = file.replace("/spec/requests/", "/app/controllers/");
 
 		if (useRequestSpecs) {
 			output = output.replace("_request", "_controller");

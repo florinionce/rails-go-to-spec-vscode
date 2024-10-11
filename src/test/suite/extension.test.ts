@@ -57,7 +57,7 @@ suite("Extension Test Suite", () => {
 			"/app/controllers/users_controller.rb",
 			false,
 			[
-				"/spec/controllers/users_controller_spec.rb",
+				"/spec/requests/users_controller_spec.rb",
 			],
 		);
 
@@ -81,7 +81,7 @@ suite("Extension Test Suite", () => {
 			"/app/controllers/clients/users_controller.rb",
 			false,
 			[
-				"/spec/controllers/clients/users_controller_spec.rb",
+				"/spec/requests/clients/users_controller_spec.rb",
 			]
 		);
 
@@ -90,7 +90,7 @@ suite("Extension Test Suite", () => {
 
 	test("controller spec to code", (done) => {
 		assertGetRelated(
-			"/spec/controllers/users_controller_spec.rb",
+			"/spec/requests/users_controller_spec.rb",
 			false,
 			[
 				"/app/controllers/users_controller.rb",
@@ -114,7 +114,7 @@ suite("Extension Test Suite", () => {
 
 	test("controller nested spec to code", (done) => {
 		assertGetRelated(
-			"/spec/controllers/clients/users_controller_spec.rb",
+			"/spec/requests/clients/users_controller_spec.rb",
 			false,
 			[
 				"/app/controllers/clients/users_controller.rb",
