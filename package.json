@@ -38,6 +38,13 @@
           "group": "railsgotospec"
         }
       ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Rails Go to Spec",
+      "properties": {
+        "railsGoToSpec.useRequestSpecs": { "type": "boolean", "default": false }
+      }
     }
   },
   "scripts": {
