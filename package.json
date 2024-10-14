@@ -2,8 +2,8 @@
   "name": "rails-go-to-spec-2",
   "displayName": "Rails Go to Spec 2",
   "description": "Switch between code and spec in Rails",
-  "version": "1.2.0",
-  "publisher": "sporto2",
+  "version": "1.3.0",
+  "publisher": "florinionce",
   "repository": "https://github.com/sporto/rails-go-to-spec-vscode",
   "engines": {
     "vscode": "^1.74.0"
@@ -38,6 +38,13 @@
           "group": "railsgotospec"
         }
       ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Rails Go to Spec",
+      "properties": {
+        "railsGoToSpec.useRequestSpecs": { "type": "boolean", "default": false }
+      }
     }
   },
   "scripts": {

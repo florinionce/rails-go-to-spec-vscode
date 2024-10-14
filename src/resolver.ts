@@ -1,9 +1,9 @@
 // For any given file return a list of possible matches
-export function getRelated(file: string): string[] {
+export function getRelated(file: string, useRequestSpecs: boolean): string[] {
 	if (isSpec(file)) {
-		return specToCode(file);
+		return specToCode(file, useRequestSpecs);
 	} else {
-		return codeToSpec(file);
+		return codeToSpec(file, useRequestSpecs);
 	}
 }
 
@@ -11,22 +11,25 @@ export function isSpec(file: string): boolean {
 	return file.indexOf("_spec.rb") > -1;
 }
 
-function codeToSpec(file: string): string[] {
+function codeToSpec(file: string, useRequestSpecs: boolean): string[] {
 	const withSpecExt = addSpecExtension(file);
-	return switchToSpecDir(withSpecExt);
+	return switchToSpecDir(withSpecExt, useRequestSpecs);
 }
 
-function specToCode(file: string): string[] {
+function specToCode(file: string, useRequestSpecs: boolean): string[] {
 	const withoutSpecExt = removeSpecExtension(file);
-	return switchToCodeDir(withoutSpecExt);
+	return switchToCodeDir(withoutSpecExt, useRequestSpecs);
 }
 
-function switchToSpecDir(file: string): string[] {
+function switchToSpecDir(file: string, useRequestSpecs: boolean): string[] {
 	if (file.includes("/app/controllers/")) {
-		return [
-			file.replace("/app/controllers/", "/spec/requests/"),
-			file.replace("/app/controllers/", "/spec/controllers/"),
-		];
+		let output = file.replace("/app/controllers/", "/spec/requests/");
+
+		if (useRequestSpecs) {
+			output = output.replace("_controller", "_request");
+		}
+
+		return [output];
 	} else if (file.includes("/app/app/")) {
 		return [
 			file.replace("/app/app/", "/app/spec/"),
@@ -44,7 +47,7 @@ function switchToSpecDir(file: string): string[] {
 	}
 }
 
-function switchToCodeDir(file: string): string[] {
+function switchToCodeDir(file: string, useRequestSpecs: boolean): string[] {
 	if (file.includes("/spec/config/initializers/")) {
 		return [
 			file.replace("/spec/", "/"),
@@ -55,9 +58,15 @@ function switchToCodeDir(file: string): string[] {
 			file.replace("/spec/", "/app/"),
 		];
 	} else if (file.includes("/spec/requests/")) {
-		return [
-			file.replace("/spec/requests/", "/app/controllers/"),
-		];
+		let output = file.replace("/spec/requests/", "/app/controllers/");
+
+		if (useRequestSpecs) {
+			output = output.replace("_request", "_controller");
+		}
+
+		return [output];
+	} else if (file.includes("/spec/requests/")) {
+		return [file.replace("/spec/requests/", "/app/controllers/")];
 	} else {
 		return [
 			file.replace("/spec/", "/app/"),
