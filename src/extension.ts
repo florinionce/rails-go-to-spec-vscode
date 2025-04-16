@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as resolver from "./resolver";
 import * as fs from "fs";
 import * as path from "path";
-import * as mkdirp from "mkdirp";
+import { mkdirp } from 'mkdirp';
 
 function openFile(fileName: string) {
 	vscode.workspace
@@ -12,8 +12,8 @@ function openFile(fileName: string) {
 
 function prompt(fileName: string, cb: any) {
 	let options = {
-		placeHolder: `Create ${fileName}?`
-	};
+			placeHolder: `Create ${fileName}?`
+		};
 
 	vscode.window.showQuickPick(["Yes", "No"], options)
 		.then(function (answer) {
@@ -26,8 +26,8 @@ function prompt(fileName: string, cb: any) {
 function openPrompt(related: string): void {
 	const dirname: string = path.dirname(related);
 	const relative = vscode.workspace.asRelativePath(related);
-	prompt(relative, function () {
-		mkdirp.sync(dirname);
+	prompt(relative, async function () {
+		await mkdirp(dirname);
 		fs.closeSync(fs.openSync(related, "w"));
 		openFile(related);
 	});
@@ -53,10 +53,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let document: vscode.TextDocument = editor.document;
 		let fileName: string = document.fileName;
+
+		const config = vscode.workspace.getConfiguration('railsGoToSpec');
+		const useRequestSpecs = config.get('useRequestSpecs') as boolean || false;
+
 		// Get a list of related files
 		// if any of those exists, open it
 		// Otherwise prompt to create the first one
-		let related: Array<string> = resolver.getRelated(fileName);
+		let related: Array<string> = resolver.getRelated(fileName, useRequestSpecs);
+
 
 		for (let relatedFile of related) {
 			let fileExists: boolean = fs.existsSync(relatedFile);
